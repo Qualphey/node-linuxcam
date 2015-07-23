@@ -1,0 +1,12 @@
+{
+  "name": "v4l2",
+  "version": "0.0.1",
+  "description": "v4l2 wrapper",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "author": "Vitalius Kuchalskis",
+  "license": "MIT",
+  "gypfile": true
+}
