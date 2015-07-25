@@ -1,2 +1,2 @@
 # node-linuxcam
-Node.js module for capturing webcam on linux
+Capturing from webcam and converting to jpeg. Linux only (v4l2)
