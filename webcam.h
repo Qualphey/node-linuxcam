@@ -11,9 +11,9 @@ struct buffer {
 
 struct RGBImage {
   unsigned char   *data; // RGB888 <=> RGB24
-  size_t          width;
-  size_t          height;
-  size_t          size; // width * height * 3
+  long unsigned int width;
+  long unsigned int height;
+  long unsigned int size;// width * height * 3
 };
 
 
