@@ -1,7 +1,13 @@
 # node-linuxcam
 Capturing from webcam and converting to jpeg. Linux only (v4l2)
 
-Example:
+Installation:
+
+```
+npm install linuxcam
+```
+
+Usage:
 
 ```
 var cam = require('linuxcam');
