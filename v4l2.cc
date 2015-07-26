@@ -21,7 +21,7 @@ void start(const FunctionCallbackInfo<Value>& args) {
 
   if (!args[0]->IsString() || !args[1]->IsUint32() || !args[2]->IsUint32()) {
     isolate->ThrowException(Exception::TypeError(
-      String::NewFromUtf8(isolate, "start(string device, int width, int height)")));
+      String::NewFromUtf8(isolate, "start(string device, Uint32 width, Uint32 height)")));
     return;
   }
 
@@ -36,7 +36,6 @@ unsigned long size;
 
 void frame(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = Isolate::GetCurrent();
-
   auto frame = webcam->frame();
 
   auto array_buffer = ArrayBuffer::New(isolate, frame.data, frame.size);

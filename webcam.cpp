@@ -101,6 +101,8 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     cinfo.err = jpeg_std_error(&jerr);
     jerr.trace_level = 10;
     jpeg_create_compress(&cinfo);
+    unsigned char *imgc = new unsigned char[img.size];
+    memcpy(imgc, img.data, img.size * sizeof(char));
     jpeg_mem_dest(&cinfo, &img.data, &img.size);
 
     cinfo.image_width = img.width;
@@ -111,17 +113,15 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
 
     jpeg_set_quality(&cinfo, 100, true);
     jpeg_start_compress(&cinfo, true);
-    int row_stride = img.width * 3;
+    int row_stride = cinfo.image_width * 3;
     JSAMPROW row_pointer[1];
-    int counter = 0;
     while (cinfo.next_scanline < cinfo.image_height) {
-      row_pointer[0] = &img.data[cinfo.next_scanline * row_stride];
+      row_pointer[0] = &imgc[cinfo.next_scanline * row_stride];
       jpeg_write_scanlines(&cinfo, row_pointer, 1);
     }
     jpeg_finish_compress(&cinfo);
     jpeg_destroy_compress(&cinfo);
-  //  jpegfile.write(reinterpret_cast<const char*>(jpeg_buffer_raw), outbuffer_size);
-    // calling free(jpeg_buffer_raw); or delete[] jpeg_buffer_raw; generates an error
+    delete imgc;
   }
 
   /*******************************************************************/
