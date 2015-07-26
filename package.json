@@ -1,6 +1,6 @@
 {
   "name": "linuxcam",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Capturing from webcam and converting to jpeg. Linux only (v4l2)",
   "main": "index.js",
   "scripts": {
