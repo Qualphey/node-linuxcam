@@ -1,18 +1,18 @@
 # node-linuxcam
 Capturing from webcam and converting to jpeg. Linux only (v4l2)
 
-#####Dependencies
+####Dependencies
 ```
-libjpeg8-dev
+libjpeg8-dev libv4l-dev
 ```
-Ubuntu ```sudo apt install libjpeg-dev```
+Ubuntu ```sudo apt install libjpeg-dev libv4l-dev```
 
-#####Installation
+####Installation
 ```
 npm install linuxcam
 ```
 
-#####Usage
+####Usage
 
 ```
 var cam = require('linuxcam');
@@ -20,7 +20,7 @@ cam.start("/dev/video0", 160, 120);
 var frame = cam.frame(); // ArrayBuffer
 ```
 
-#####Simple SocketIO server example
+####Simple SocketIO server example
 
 ```
 var app = require('express')();
@@ -49,7 +49,7 @@ http.listen(9639, function(){
 });
 
 ```
-#####Client
+####Client
 ```
 socket = io("http://localhost:9639");
 var canvas = document.getElementById("canvas");
