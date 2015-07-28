@@ -3,6 +3,10 @@
   "version": "0.1.5",
   "description": "Capturing from webcam and converting to jpeg. Linux only (v4l2)",
   "main": "index.js",
+  "repository" : {
+    "type":"git",
+    "url":"https://github.com/Qualphey/node-linuxcam"
+  },
   "scripts": {
     "test": "node test.js"
   },
