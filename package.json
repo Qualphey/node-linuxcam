@@ -5,12 +5,42 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/Qualphey/node-linuxcam"
+    "url": "git+https://github.com/Qualphey/node-linuxcam.git"
   },
   "scripts": {
-    "test": "node test.js"
+    "test": "node test.js",
+    "install": "node-gyp rebuild"
   },
-  "author": "Vitalius Kuchalskis",
+  "author": {
+    "name": "Vitalius Kuchalskis"
+  },
   "license": "MIT",
-  "gypfile": true
+  "gypfile": true,
+  "gitHead": "11af8e10aaab5fc7a6420a1d9c33152ad9d3a1a4",
+  "bugs": {
+    "url": "https://github.com/Qualphey/node-linuxcam/issues"
+  },
+  "homepage": "https://github.com/Qualphey/node-linuxcam#readme",
+  "_id": "linuxcam@0.1.6",
+  "_shasum": "01aae5e8dd9bee048f506b15ed5690b0fd48b6dd",
+  "_from": "linuxcam@*",
+  "_npmVersion": "2.11.3",
+  "_nodeVersion": "0.12.7",
+  "_npmUser": {
+    "name": "qualphey",
+    "email": "qualphey@gmail.com"
+  },
+  "dist": {
+    "shasum": "01aae5e8dd9bee048f506b15ed5690b0fd48b6dd",
+    "tarball": "http://registry.npmjs.org/linuxcam/-/linuxcam-0.1.6.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "qualphey",
+      "email": "qualphey@gmail.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/linuxcam/-/linuxcam-0.1.6.tgz",
+  "readme": "ERROR: No README data found!"
 }

@@ -95,7 +95,7 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     }
   }
 
-  void rgb24_to_jpeg(RGBImage img) {
+  long unsigned int rgb24_to_jpeg(RGBImage img) {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
@@ -103,7 +103,8 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     jpeg_create_compress(&cinfo);
     unsigned char *imgc = new unsigned char[img.size];
     memcpy(imgc, img.data, img.size * sizeof(char));
-    jpeg_mem_dest(&cinfo, &img.data, &img.size);
+    long unsigned int size;
+    jpeg_mem_dest(&cinfo, &img.data, &size);
 
     cinfo.image_width = img.width;
     cinfo.image_height = img.height;
@@ -122,6 +123,7 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     jpeg_finish_compress(&cinfo);
     jpeg_destroy_compress(&cinfo);
     delete imgc;
+    return size;
   }
 
   /*******************************************************************/
@@ -186,8 +188,12 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
         xres,
         yres,
         stride);
-        rgb24_to_jpeg(rgb_frame);
-        return rgb_frame;
+
+        jpeg_frame.size = rgb24_to_jpeg(rgb_frame);
+        jpeg_frame.data = rgb_frame.data;
+        jpeg_frame.width = rgb_frame.width;
+        jpeg_frame.height = rgb_frame.height;
+        return jpeg_frame;
       }
       /* EAGAIN - continue select loop. */
     }

@@ -57,6 +57,7 @@ private:
   int fd;
 
   RGBImage rgb_frame;
+  RGBImage jpeg_frame;
   struct buffer          *buffers;
   unsigned int     n_buffers;
 
