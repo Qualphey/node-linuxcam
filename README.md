@@ -3,9 +3,9 @@ Capturing from webcam and converting to jpeg. Linux only (v4l2)
 
 ####Dependencies
 ```
-libjpeg8-dev libv4l-dev
+libjpeg8-dev
 ```
-Ubuntu ```sudo apt install libjpeg-dev libv4l-dev```
+Ubuntu ```sudo apt install libjpeg-dev```
 
 ####Installation
 ```
