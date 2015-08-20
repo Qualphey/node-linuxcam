@@ -1,19 +1,60 @@
 /** Small C++ wrapper around V4L example code to access the webcam
 **/
 
+#include <iostream>
 #include <string>
 #include <memory> // unique_ptr
+#include <cstring>
+
+#include <iostream>
+
+#include <stdlib.h>
+#include <assert.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <errno.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/time.h>
+#include <sys/mman.h>
+#include <sys/ioctl.h>
+
+#include <stdexcept>
+
+#include <linux/videodev2.h>
+
+#include <jpeglib.h>
+
+using namespace std;
 
 struct buffer {
   void   *data;
   size_t  size;
 };
 
-struct RGBImage {
-  unsigned char   *data; // RGB888 <=> RGB24
-  long unsigned int width;
-  long unsigned int height;
-  long unsigned int size;// width * height * 3
+class Image {
+  public:
+    unsigned char *data = NULL;
+    long unsigned int width = 0;
+    long unsigned int height = 0;
+    long unsigned int size = 0;
+
+    Image(long unsigned int width, long unsigned int height) {
+      this->width = width;
+      this->height = height;
+    }
+
+    Image(long unsigned int width, long unsigned int height,
+                                      long unsigned int size) {
+      data = (unsigned char *) malloc(size);
+      this->width = width;
+      this->height = height;
+      this->size = size;
+    }
+
+    ~Image() {
+      delete[] data;
+    }
 };
 
 
@@ -37,7 +78,7 @@ public:
   *
   * Throws a runtime_error if the timeout is reached.
   */
-  const RGBImage& frame(int timeout = 1);
+  const Image* frame(int timeout = 1);
 
 private:
   void init_mmap();
@@ -56,8 +97,8 @@ private:
   std::string device;
   int fd;
 
-  RGBImage rgb_frame;
-  RGBImage jpeg_frame;
+  Image *rgb_frame;
+  Image *jpeg_frame;
   struct buffer          *buffers;
   unsigned int     n_buffers;
 

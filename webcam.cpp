@@ -20,31 +20,9 @@ Inc., 51 Franklin Street, Suite 500, Boston, MA  02110-1335  USA
 
 */
 
-#include <iostream>
-
-#include <stdlib.h>
-#include <assert.h>
-#include <fcntl.h>              /* low-level i/o */
-#include <unistd.h>
-#include <errno.h>
-#include <string.h> // strerrno
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <sys/mman.h>
-#include <sys/ioctl.h>
-
-#include <stdexcept>
-
-#include <linux/videodev2.h>
-
-#include <jpeglib.h>
-
 #include "webcam.h"
 
 #define CLEAR(x) memset(&(x), 0, sizeof(x))
-
-using namespace std;
 
 static int xioctl(int fh, unsigned long int request, void *arg)
 {
@@ -95,19 +73,19 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     }
   }
 
-  long unsigned int rgb24_to_jpeg(RGBImage img) {
+  Image* rgb24_to_jpeg(Image *img, Image *jpeg) {
     jpeg_compress_struct cinfo;
     jpeg_error_mgr jerr;
     cinfo.err = jpeg_std_error(&jerr);
     jerr.trace_level = 10;
     jpeg_create_compress(&cinfo);
-    unsigned char *imgc = new unsigned char[img.size];
-    memcpy(imgc, img.data, img.size * sizeof(char));
-    long unsigned int size;
-    jpeg_mem_dest(&cinfo, &img.data, &size);
 
-    cinfo.image_width = img.width;
-    cinfo.image_height = img.height;
+    unsigned char *imgd = 0;
+    long unsigned int size = 0;
+    jpeg_mem_dest(&cinfo, &imgd, &size);
+
+    cinfo.image_width = img->width;
+    cinfo.image_height = img->height;
     cinfo.input_components = 3;
     cinfo.in_color_space = JCS_RGB;
     jpeg_set_defaults(&cinfo);
@@ -117,13 +95,21 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     int row_stride = cinfo.image_width * 3;
     JSAMPROW row_pointer[1];
     while (cinfo.next_scanline < cinfo.image_height) {
-      row_pointer[0] = &imgc[cinfo.next_scanline * row_stride];
+      row_pointer[0] = &img->data[cinfo.next_scanline * row_stride];
       jpeg_write_scanlines(&cinfo, row_pointer, 1);
     }
     jpeg_finish_compress(&cinfo);
     jpeg_destroy_compress(&cinfo);
-    delete imgc;
-    return size;
+//    size += 512; // TODO: actual value to expand jpeg buffer... JPEG header?
+    if (jpeg->data == NULL) {
+      jpeg->data = (unsigned char *) malloc(size);
+    } else {
+      jpeg->data = (unsigned char *) realloc(jpeg->data, size);
+    }
+    memcpy(jpeg->data, imgd, size);
+    jpeg->size = size;
+    delete[] imgd;
+    return jpeg;
   }
 
   /*******************************************************************/
@@ -137,12 +123,8 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     open_device();
     init_device();
     // xres and yres are set to the actual resolution provided by the cam
-
-    // frame stored as RGB888 (ie, RGB24)
-    rgb_frame.width = xres;
-    rgb_frame.height = yres;
-    rgb_frame.size = xres * yres * 3;
-    rgb_frame.data = (unsigned char *) malloc(rgb_frame.size * sizeof(char));
+    rgb_frame = new Image(xres, yres, xres * yres * 3);
+    jpeg_frame = new Image(xres, yres);
 
     start_capturing();
   }
@@ -152,11 +134,9 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     stop_capturing();
     uninit_device();
     close_device();
-
-    free(rgb_frame.data);
   }
 
-  const RGBImage& Webcam::frame(int timeout)
+  const Image* Webcam::frame(int timeout)
   {
     for (;;) {
       fd_set fds;
@@ -183,16 +163,16 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
       }
       int idx = read_frame();
       if (idx != -1) {
+        free(rgb_frame->data);
+        rgb_frame->data = (unsigned char *) malloc(rgb_frame->size);
         v4lconvert_yuyv_to_rgb24((unsigned char *) buffers[idx].data,
-        rgb_frame.data,
+        rgb_frame->data,
         xres,
         yres,
         stride);
-
-        jpeg_frame.size = rgb24_to_jpeg(rgb_frame);
-        jpeg_frame.data = rgb_frame.data;
-        jpeg_frame.width = rgb_frame.width;
-        jpeg_frame.height = rgb_frame.height;
+//        delete[] jpeg_frame.data;
+        rgb24_to_jpeg(rgb_frame, jpeg_frame);
+//        cout << jpeg_frame.size << endl;
         return jpeg_frame;
       }
       /* EAGAIN - continue select loop. */

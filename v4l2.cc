@@ -38,7 +38,7 @@ void frame(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = Isolate::GetCurrent();
   auto frame = webcam->frame();
 
-  auto array_buffer = ArrayBuffer::New(isolate, frame.data, frame.size);
+  auto array_buffer = ArrayBuffer::New(isolate, frame->data, frame->size);
 //  auto uint8_array = Uint8Array::New(array_buffer, 0, frame.size);
 
   args.GetReturnValue().Set(array_buffer);
