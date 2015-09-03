@@ -1,14 +1,26 @@
 {
   "name": "linuxcam",
-  "version": "2.0.1",
+  "version": "2.0.4",
   "description": "Capturing images from webcam and converting to rgb24. Linux only (v4l2)",
   "main": "index.js",
+  "keywords": [
+    "cam",
+    "webcam",
+    "camera",
+    "v4l2",
+    "linux",
+    "capture",
+    "rgb",
+    "rgb24",
+    "frame",
+    "image",
+    "picture"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Qualphey/node-linuxcam.git"
   },
   "scripts": {
-    "test": "node test.js",
     "install": "node-gyp rebuild"
   },
   "author": {
@@ -16,31 +28,14 @@
   },
   "license": "MIT",
   "gypfile": true,
-  "gitHead": "11af8e10aaab5fc7a6420a1d9c33152ad9d3a1a4",
-  "bugs": {
-    "url": "https://github.com/Qualphey/node-linuxcam/issues"
-  },
-  "homepage": "https://github.com/Qualphey/node-linuxcam#readme",
-  "_id": "linuxcam@0.2.0",
-  "_shasum": "b916c296503450d0f6a67206af412f0a6a7f4346",
-  "_from": "linuxcam@*",
-  "_npmVersion": "2.11.3",
-  "_nodeVersion": "0.12.7",
   "_npmUser": {
     "name": "qualphey",
     "email": "qualphey@gmail.com"
-  },
-  "dist": {
-    "shasum": "b916c296503450d0f6a67206af412f0a6a7f4346",
-    "tarball": "http://registry.npmjs.org/linuxcam/-/linuxcam-0.2.0.tgz"
   },
   "maintainers": [
     {
       "name": "qualphey",
       "email": "qualphey@gmail.com"
     }
-  ],
-  "directories": {},
-  "_resolved": "https://registry.npmjs.org/linuxcam/-/linuxcam-0.2.0.tgz",
-  "readme": "ERROR: No README data found!"
+  ]
 }

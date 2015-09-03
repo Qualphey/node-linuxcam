@@ -1,12 +1,12 @@
 # node-linuxcam
 Capturing images from webcam and converting to rgb24. Linux only (v4l2)
 
-#Installation
+## Installation
 ```
 npm install linuxcam
 ```
 
-#Usage
+## Usage
 
 ```
 var cam = require('linuxcam');
@@ -22,7 +22,7 @@ var jpeg = new Jpeg(frame.data, frame.width, frame.height, 'rgb');
 var jpeg_image = jpeg.encodeSync(); // Buffer
 ```
 
-#Simple live streaming example with SocketIO
+## Simple live streaming example with SocketIO
 
 ```
 var app = require('express')();
@@ -54,7 +54,7 @@ http.listen(9639, function(){
   console.log('listening on *:9639');
 });
 ```
-#Client
+## Client
 ```
 <!DOCTYPE html>
 <html>
