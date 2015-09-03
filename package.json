@@ -21,8 +21,8 @@
     "url": "https://github.com/Qualphey/node-linuxcam/issues"
   },
   "homepage": "https://github.com/Qualphey/node-linuxcam#readme",
-  "_id": "linuxcam@0.1.10",
-  "_shasum": "f6009221a285a8802bdc2d25efda6430229383dd",
+  "_id": "linuxcam@0.2.0",
+  "_shasum": "b916c296503450d0f6a67206af412f0a6a7f4346",
   "_from": "linuxcam@*",
   "_npmVersion": "2.11.3",
   "_nodeVersion": "0.12.7",
@@ -31,8 +31,8 @@
     "email": "qualphey@gmail.com"
   },
   "dist": {
-    "shasum": "01aae5e8dd9bee048f506b15ed5690b0fd48b6dd",
-    "tarball": "http://registry.npmjs.org/linuxcam/-/linuxcam-0.1.6.tgz"
+    "shasum": "b916c296503450d0f6a67206af412f0a6a7f4346",
+    "tarball": "http://registry.npmjs.org/linuxcam/-/linuxcam-0.2.0.tgz"
   },
   "maintainers": [
     {
@@ -41,7 +41,6 @@
     }
   ],
   "directories": {},
-  "_resolved": "https://registry.npmjs.org/linuxcam/-/linuxcam-0.1.6.tgz",
-  "readme": "# node-linuxcam\nCapturing from webcam and converting to jpeg. Linux only (v4l2)\n\n####Dependencies\n```\nlibjpeg8-dev\n```\nUbuntu ```sudo apt install libjpeg-dev```\n\n####Installation\n```\nnpm install linuxcam\n```\n\n####Usage\n\n```\nvar cam = require('linuxcam');\ncam.start(\"/dev/video0\", 160, 120);\nvar frame = cam.frame(); // ArrayBuffer\n```\n\n####Simple SocketIO server example\n\n```\nvar app = require('express')();\nvar http = require('http').Server(app);\nvar io = require('socket.io')(http);\nvar cam = require('linuxcam');\n\ncam.start(\"/dev/video0\", 160, 120);\n\nfunction update(socket) {\n  socket.emit(\"frame\", cam.frame());\n  setTimeout(function() {\n    update(socket);\n  }, 0);\n}\n\nio.on('connection', function(socket){\n  socket.on('error', function(err){\n    console.log(\"ERROR: \"+err);\n  });\n  update(socket);\n});\n\nhttp.listen(9639, function(){\n  console.log('listening on *:9639');\n});\n\n```\n####Client\n```\nsocket = io(\"http://localhost:9639\");\nvar canvas = document.getElementById(\"canvas\");\nvar ctx = canvas.getContext(\"2d\");\n\nvar image = new Image();\nimage.onload = function() {\n  ctx.drawImage(image, 0, 0, 160, 120);\n};\n\nsocket.on('frame', function (frame) {\n  image.src = \"data:image/jpeg;base64,\" + arrayBufferToBase64(frame);\n});\n\n// ---- HTML ----\n<canvas id=\"canvas\" width=\"160\" height=\"120\"></canvas>\n```\n",
-  "readmeFilename": "README.md"
+  "_resolved": "https://registry.npmjs.org/linuxcam/-/linuxcam-0.2.0.tgz",
+  "readme": "ERROR: No README data found!"
 }

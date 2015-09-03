@@ -23,8 +23,6 @@
 
 #include <linux/videodev2.h>
 
-#include <jpeglib.h>
-
 using namespace std;
 
 struct buffer {
@@ -79,7 +77,6 @@ public:
   * Throws a runtime_error if the timeout is reached.
   */
   const Image* frame(int timeout = 1);
-
 private:
   void init_mmap();
 
@@ -98,7 +95,6 @@ private:
   int fd;
 
   Image *rgb_frame;
-  Image *jpeg_frame;
   struct buffer          *buffers;
   unsigned int     n_buffers;
 

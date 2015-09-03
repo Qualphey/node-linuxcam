@@ -31,17 +31,19 @@ void start(const FunctionCallbackInfo<Value>& args) {
   webcam = new Webcam(devstr, args[1]->Uint32Value(), args[2]->Uint32Value());
 }
 
-uint8_t* data;
-unsigned long size;
-
 void frame(const FunctionCallbackInfo<Value>& args) {
   Isolate* isolate = Isolate::GetCurrent();
   auto frame = webcam->frame();
 
-  auto array_buffer = ArrayBuffer::New(isolate, frame->data, frame->size);
+  Local<Array> array = Array::New(isolate, 3);
+  array->Set(0, ArrayBuffer::New(isolate, frame->data, frame->size));
+  array->Set(1, Integer::NewFromUnsigned(isolate, frame->width));
+  array->Set(2, Integer::NewFromUnsigned(isolate, frame->height));
+
+
 //  auto uint8_array = Uint8Array::New(array_buffer, 0, frame.size);
 
-  args.GetReturnValue().Set(array_buffer);
+  args.GetReturnValue().Set(array);
 }
 
 void init(Handle<Object> exports) {

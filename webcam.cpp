@@ -73,48 +73,6 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     }
   }
 
-  Image* rgb24_to_jpeg(Image *img, Image *jpeg) {
-    jpeg_compress_struct cinfo;
-    jpeg_error_mgr jerr;
-    cinfo.err = jpeg_std_error(&jerr);
-    jerr.trace_level = 10;
-    jpeg_create_compress(&cinfo);
-
-    unsigned char *imgd = 0;
-    long unsigned int size = 0;
-    jpeg_mem_dest(&cinfo, &imgd, &size);
-
-    cinfo.image_width = img->width;
-    cinfo.image_height = img->height;
-    cinfo.input_components = 3;
-    cinfo.in_color_space = JCS_RGB;
-    jpeg_set_defaults(&cinfo);
-
-    jpeg_set_quality(&cinfo, 100, true);
-    jpeg_start_compress(&cinfo, true);
-    int row_stride = cinfo.image_width * 3;
-    JSAMPROW row_pointer[1];
-    while (cinfo.next_scanline < cinfo.image_height) {
-      row_pointer[0] = &img->data[cinfo.next_scanline * row_stride];
-      jpeg_write_scanlines(&cinfo, row_pointer, 1);
-    }
-    jpeg_finish_compress(&cinfo);
-    jpeg_destroy_compress(&cinfo);
-//    size += 512; // TODO: actual value to expand jpeg buffer... JPEG header?
-    if (jpeg->data == NULL) {
-      jpeg->data = (unsigned char *) malloc(size);
-    } else {
-      jpeg->data = (unsigned char *) realloc(jpeg->data, size);
-    }
-    memcpy(jpeg->data, imgd, size);
-    jpeg->size = size;
-    delete[] imgd;
-    return jpeg;
-  }
-
-  /*******************************************************************/
-
-
   Webcam::Webcam(const string& device, int width, int height) :
   device(device),
   xres(width),
@@ -124,7 +82,6 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
     init_device();
     // xres and yres are set to the actual resolution provided by the cam
     rgb_frame = new Image(xres, yres, xres * yres * 3);
-    jpeg_frame = new Image(xres, yres);
 
     start_capturing();
   }
@@ -163,17 +120,12 @@ static void v4lconvert_yuyv_to_rgb24(const unsigned char *src,
       }
       int idx = read_frame();
       if (idx != -1) {
-        free(rgb_frame->data);
-        rgb_frame->data = (unsigned char *) malloc(rgb_frame->size);
         v4lconvert_yuyv_to_rgb24((unsigned char *) buffers[idx].data,
         rgb_frame->data,
         xres,
         yres,
         stride);
-//        delete[] jpeg_frame.data;
-        rgb24_to_jpeg(rgb_frame, jpeg_frame);
-//        cout << jpeg_frame.size << endl;
-        return jpeg_frame;
+        return rgb_frame;
       }
       /* EAGAIN - continue select loop. */
     }
