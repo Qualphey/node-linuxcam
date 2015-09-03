@@ -2,13 +2,13 @@
 Capturing images from webcam and converting to rgb24. Linux only (v4l2)
 
 ## Installation
-```
+```js
 npm install linuxcam
 ```
 
 ## Usage
 
-```
+```js
 var cam = require('linuxcam');
 cam.start("/dev/video0", 320, 240);
 var frame = cam.frame(); // Buffer
@@ -16,7 +16,7 @@ var frame = cam.frame(); // Buffer
 
 The buffer contains rgb24 data and you can convert it using jpeg-fresh module.
 
-```
+```js
 var Jpeg = require('jpeg-fresh').Jpeg;
 var jpeg = new Jpeg(frame.data, frame.width, frame.height, 'rgb');
 var jpeg_image = jpeg.encodeSync(); // Buffer
@@ -24,7 +24,7 @@ var jpeg_image = jpeg.encodeSync(); // Buffer
 
 ## Simple live streaming example with SocketIO
 
-```
+```js
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -55,7 +55,7 @@ http.listen(9639, function(){
 });
 ```
 ## Client
-```
+```html
 <!DOCTYPE html>
 <html>
   <head>
