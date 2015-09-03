@@ -22,7 +22,7 @@ var jpeg = new Jpeg(frame.data, frame.width, frame.height, 'rgb');
 var jpeg_image = jpeg.encodeSync(); // Buffer
 ```
 
-#Simple SocketIO server example
+#Simple live streaming example with SocketIO
 
 ```
 var app = require('express')();
@@ -31,7 +31,7 @@ var io = require('socket.io')(http);
 var cam = require('linuxcam');
 var Jpeg = require('jpeg-fresh').Jpeg;
 
-cam.start("/dev/video0", 160, 120);
+cam.start("/dev/video0", 320, 240);
 
 function update(socket) {
   var frame = cam.frame();
@@ -40,7 +40,7 @@ function update(socket) {
   socket.emit("frame", jpeg_frame.toString('base64'));
   setTimeout(function() {
     update(socket);
-  }, 0);
+  }, 40);
 }
 
 io.on('connection', function(socket){
@@ -53,23 +53,31 @@ io.on('connection', function(socket){
 http.listen(9639, function(){
   console.log('listening on *:9639');
 });
-
 ```
 #Client
 ```
-socket = io("http://localhost:9639");
-var canvas = document.getElementById("canvas");
-var ctx = canvas.getContext("2d");
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+  <head>
+  <body>
+    <canvas id="canvas" width="320" height="240"></canvas>
+    <script>
+      socket = io("http://localhost:9639");
+      var canvas = document.getElementById("canvas");
+      var ctx = canvas.getContext("2d");
 
-var image = new Image();
-image.onload = function() {
-  ctx.drawImage(image, 0, 0, 160, 120);
-};
+      var image = new Image();
+      image.onload = function() {
+        ctx.drawImage(image, 0, 0, 320, 240);
+      };
 
-socket.on('frame', function (frame) {
-  image.src = "data:image/jpeg;base64," + frame;
-});
+      socket.on('frame', function (frame) {
+        image.src = "data:image/jpeg;base64," + frame;
+      });
+    </script>
+  </body>
+</html>
 
-// ---- HTML ----
-<canvas id="canvas" width="160" height="120"></canvas>
 ```
