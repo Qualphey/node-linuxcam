@@ -1,6 +1,6 @@
 {
   "name": "linuxcam",
-  "version": "2.0.6",
+  "version": "1.0.6",
   "description": "Capturing images from webcam and converting to rgb24. Linux only (v4l2)",
   "main": "index.js",
   "keywords": [
